@@ -4,7 +4,6 @@ Jinja2==3.0.0
 click==7.1.2
 itsdangerous==2.0.1
 MarkupSafe==2.0.0rc2
-
 paramiko
-
 mysql-connector-python
+python-dotenv==1.0.0

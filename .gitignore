@@ -147,6 +147,8 @@ ENV/
 env.bak/
 venv.bak/
 
+*.pem
+
 # Spyder project settings
 .spyderproject
 .spyproject

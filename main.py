@@ -9,6 +9,7 @@
 
 from flask import Flask, render_template, request, url_for, flash
 from werkzeug.utils import redirect
+from run_wiki_on_ec2 import run_wiki_on_ec2
 app = Flask(__name__)
 app.config['ENV'] = "Development"
 app.config['DEBUG'] = True
@@ -20,8 +21,9 @@ def home():
     result = None
     if request.method == 'POST':
         query = request.form['query']
-        result = "I have no clue"
+        result = run_wiki_on_ec2(query)
     return render_template("index.html", result=result)
 
 if __name__ == '__main__':
     app.run()
+    # app.run(host="0.0.0.0", port=8888)
