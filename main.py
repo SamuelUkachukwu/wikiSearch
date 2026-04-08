@@ -10,6 +10,7 @@
 from flask import Flask, render_template, request, url_for, flash
 from werkzeug.utils import redirect
 from run_wiki_on_ec2 import run_wiki_on_ec2
+from database import get_database, check_cache, save_cache
 app = Flask(__name__)
 app.config['ENV'] = "Development"
 app.config['DEBUG'] = True
@@ -19,10 +20,18 @@ app.config['DEBUG'] = True
 @app.route('/', methods=['GET', 'POST'])
 def home():
     result = None
+    query = None
     if request.method == 'POST':
+        # query = request.form.get('query')
         query = request.form['query']
-        result = run_wiki_on_ec2(query)
-    return render_template("index.html", result=result)
+
+        cached_result = check_cache(query)
+        if cached_result:
+            result = cached_result
+        else:
+            result = run_wiki_on_ec2(query)
+            save_cache(query, result)
+    return render_template("index.html", result=result, query=query)
 
 if __name__ == '__main__':
     app.run()
