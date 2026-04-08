@@ -7,10 +7,9 @@
 # Press the green button in the gutter to run the script.
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
-from flask import Flask, render_template, request, url_for, flash
-from werkzeug.utils import redirect
+from flask import Flask, render_template, request
 from run_wiki_on_ec2 import run_wiki_on_ec2
-from database import get_database, check_cache, save_cache
+from database import check_cache, save_cache
 app = Flask(__name__)
 app.config['ENV'] = "Development"
 app.config['DEBUG'] = True
@@ -22,8 +21,9 @@ def home():
     result = None
     query = None
     if request.method == 'POST':
-        # query = request.form.get('query')
-        query = request.form['query']
+        query = request.form['query'].strip()
+        if not query:
+            return render_template("index.html", result="Please enter a search term.")
 
         cached_result = check_cache(query)
         if cached_result:
@@ -34,5 +34,5 @@ def home():
     return render_template("index.html", result=result, query=query)
 
 if __name__ == '__main__':
-    app.run()
-    # app.run(host="0.0.0.0", port=8888)
+    # app.run()
+    app.run(host="0.0.0.0", port=8888)
